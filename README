@@ -1,0 +1,58 @@
+READ_ME 
+
+Script1.sh: Criação de diretorias
+- Este scrip cria  diretorias: raw_data; fastqc1; fastqc1; fastp; multiqc1; multiqc2 na diretoria base. Caso não existam, vai criá-las.
+- Começamos por definir 2 variáveis:
+	base_dir (diretoria base);
+	output_dirs(variáveis para subdiretorias);
+- No final faz print da confirmação da criação das diretorias.
+
+
+Script2.sh: Funções
+- Funcões para os comandos: fastqc, fastP e multiqc.
+
+#função run_fastqc()#
+- Corre o comando fastqc quando é chamada, em ambas as fases (phase 1 e phase 2), sem ser necessário repetir o código duas vezes. 
+- Vai iterar sobre os ficheiros fastq.gz (de ambos os paired-ends: 1 e 2), idependentemente do número de ficheiros que se encontram na pasta.
+- No primeiro "for", vai confirmar se o par correspondente existe, caso não encontre, o programa pára.
+- No final faz um print a confirmar que o fastqc foi feito com sucesso.
+
+#função run_multiqc()#
+- Corre o comando multqc quando é chamada, em ambas as fases (phase 1 e phase 2), sem ser necessário repetir o código duas vezes. 
+- Vai correr o comando multiqc sobre a diretoria selecionada
+- No final, faz um print a confirmar que o multiqc foi feito com sucesso.
+
+#função run_fastp()#
+- Corre o comando fastp quando é chamada
+- Vai iterar sobre os ficheiros fastq.gz (de ambos os paired-ends: 1 e 2), idependentemente do número de ficheiros da pasta
+- No primeiro "for", vai confirmar se o par correspondente existe, caso não encontre, o programa pára
+- Quando o processo for completado, gera ficheiros de ambos os pares com um nome diferente, neste caso com "_fp.fastq.gz".
+- No final faz um print a confirmar que o fastp foi feito com sucesso.
+
+
+fastqc (phase 1):
+- Input: diretoria "data_dir" / "raw_data"
+- Output: diretoria "fastqc1_dir" / fastqc1
+
+multiqc (phase 1):
+- Input: diretoria "fastqc1_dir" / fastqc1
+- Output: diretoria "multiqc1_dir" / multiqc1
+
+fastp:
+- Input: diretoria "data_dir" / "raw_data"
+- Output: diretoria "fastp_dir" / fastp
+
+fastqc (phase 2):
+- Input: diretoria "fastp_dir" / fastp
+- Output: diretoria "fastqc2_dir" / fastqc2
+
+multiqc (phase 2):
+- Input: diretoria "fastqc2_dir" / fastqc2
+- Output: diretoria "multiqc2_dir" / multiqc2
+
+
+Script3: Contagem de reads
+- Este script serve para fazer a contagem de reads dos ficheiros fastq
+- Vai iterar sobre os ficheiros fastq.gz (de ambos os paired-ends: 1 e 2), idependentemente do número de ficheiros da pasta
+- No primeiro "for", vai confirmar se o par correspondente existe, caso não encontre, o programa pára
+- No primeiro "if", quando encontrado os ficheiros descomprime-os e faz a contagem do nº de reads que é calculado pelo número de linhas / 4 : uma vez que cada read é representado por quatro linhas: @cabeçalho, sequência, +/-, e qualidade)
